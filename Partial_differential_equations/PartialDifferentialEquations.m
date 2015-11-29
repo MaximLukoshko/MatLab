@@ -10,10 +10,10 @@ HeightLeftZone = 10;
 HeightRightZone = 7;
 
 MAX_ITER = 10000;
-eps = 0.01;
+eps = 0.0001;
 Lambda = 1.7;
 
-h = 0.2;
+h = 0.1;
 i_max = floor(WIDTH / h);
 j_max = floor(HEIGHT / h);
 j_max_left = floor(HeightLeftZone / h) ;
@@ -99,9 +99,17 @@ figure;
 disp(Temperatures);
 surf(Temperatures,'EdgeColor', 'None');
 
+F_in = 0;
+F_out = 0;
+
 for j=1:j_max
+    F_in = F_in + Temperatures(j, 1) - Temperatures(j, 2);
+    F_out = F_out + Temperatures(j, j_max) - Temperatures(j, j_max - 1);
     Temperatures(j, i_max+1) = min(TLeft, TRight);
 end
+
+conservatism = abs(F_in + F_out) / (abs(F_in)+abs(F_out));
+disp(num2str(conservatism));
 
 figure;
 surf(Temperatures,'EdgeColor', 'None');
