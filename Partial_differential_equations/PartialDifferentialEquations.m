@@ -1,6 +1,7 @@
 close all
 clear all
 
+% Initial Condition
 TLeft = 160.0; 
 TRight = 350.0; 
 WIDTH = 20; 
@@ -8,17 +9,19 @@ HEIGHT = 12;
 HeightLeftZone = 10; 
 HeightRightZone = 7;
 
+% Stop Parametres
 MAX_ITER = 10000;
 eps = 0.001;
 Lambda = 1.7;
 
+% Sharing to zones
 h = 0.1;
 i_max = floor(WIDTH / h);
 j_max = floor(HEIGHT / h);
 j_max_left = floor(HeightLeftZone / h) ;
 j_min_right = j_max - ceil(HeightRightZone / h);
 
-Temperatures = repmat(TRight, j_max, i_max);
+Temperatures = repmat(TRight, j_max, i_max);    % Matrix of temperaturies
 
 for k = j_max - j_max_left + 1:j_max
    Temperatures(k, 1) = TLeft; 
@@ -34,6 +37,7 @@ while num_iter < MAX_ITER && deltaMax > eps
 
     for i = 1:i_max 
         for j = 1:j_max
+            % Choosing the template
             if i == 1
                 if j == 1
                     Temp_help =  0.5 * (Temperatures(1, 2) + Temperatures(2, 1));
@@ -76,6 +80,7 @@ while num_iter < MAX_ITER && deltaMax > eps
                 end
             end
             
+            % Relaxation if it's necessary
             if i == 1 && j < j_max - j_max_left + 1 || i > 1 && i < i_max || i == i_max && j > j_max - j_min_right - 1
                 delta = Lambda * (Temp_help - Temperatures(j, i));
                 Temperatures(j, i) = Temperatures(j, i) + delta;
@@ -96,6 +101,7 @@ figure;
 disp(Temperatures);
 surf(Temperatures,'EdgeColor', 'None');
 
+% Flow, that go in and out the zone
 F_in = 0;
 F_out = 0;
 
