@@ -1,7 +1,6 @@
 close all
 clear all
 
-a = 25;
 TLeft = 160.0; 
 TRight = 350.0; 
 WIDTH = 20; 
