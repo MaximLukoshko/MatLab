@@ -1,11 +1,27 @@
 close all
 clear all
 
-t1=160.0; 
-t2=350.0; 
-WIDTH=20; 
-HEIGHT=12; 
-HeightLeftZone=5; 
-y2=10;
+TLeft = 160.0; 
+TRight = 350.0; 
+WIDTH = 20; 
+HEIGHT = 12; 
+HeightLeftZone = 10; 
+HeightRightZone = 7;
+
+h = 1;
+i_max = floor(WIDTH / h)+1;
+j_max = floor(HEIGHT / h)+1;
+j_max_left = floor(HeightLeftZone / h) + 1;
+j_min_right = i_max - floor(HeightRightZone / h) - 1;
+
+Temperatures = zeros(j_max, i_max);
+
+for k=j_max-j_max_left+1:j_max
+   Temperatures(k, 1) = TLeft; 
+end
+for k=j_max-j_max_left+1:j_max
+   Temperatures(k, i_max) = TLeft; 
+end
 
 
+disp(Temperatures);
