@@ -1,0 +1,11 @@
+close all
+clear all
+
+t1=160.0; 
+t2=350.0; 
+WIDTH=20; 
+HEIGHT=12; 
+HeightLeftZone=5; 
+y2=10;
+
+
