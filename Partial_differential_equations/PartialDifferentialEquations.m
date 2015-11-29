@@ -10,7 +10,7 @@ HeightLeftZone = 10;
 HeightRightZone = 7;
 
 MAX_ITER = 10000;
-eps = 0.0001;
+eps = 0.001;
 Lambda = 1.7;
 
 h = 0.1;
@@ -24,8 +24,6 @@ Temperatures = repmat(TRight, j_max, i_max);
 for k = j_max - j_max_left + 1:j_max
    Temperatures(k, 1) = TLeft; 
 end
-
-
 
 deltaMax = 1 + eps;
 num_iter = 0;
