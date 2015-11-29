@@ -11,6 +11,7 @@ HeightRightZone = 7;
 
 MAX_ITER = 1000;
 eps = 0.001;
+Lambda = 1.7;
 
 h = 1;
 i_max = floor(WIDTH / h);
@@ -20,13 +21,10 @@ j_min_right = j_max - ceil(HeightRightZone / h);
 
 Temperatures = repmat(TRight, j_max, i_max);
 
-for k=j_max - j_max_left + 1:j_max
+for k = j_max - j_max_left + 1:j_max
    Temperatures(k, 1) = TLeft; 
 end
 
-% for k=1:j_max - j_min_right;
-%    Temperatures(k, i_max) = TRight; 
-% end
 
 disp(Temperatures);
 
@@ -36,6 +34,12 @@ deltaMax = 1 + eps;
 num_iter = 0;
 
 while num_iter < MAX_ITER && deltaMax > eps
+    for j = 2:j_max
+        for i = 2:i_max
+            
+            en
+    end
     
+    Temperatures(j, i) = Temperatures(j, i) + Labda * (tmp1 - Temperatures(j, i));
     num_iter = num_iter + 1; 
 end
