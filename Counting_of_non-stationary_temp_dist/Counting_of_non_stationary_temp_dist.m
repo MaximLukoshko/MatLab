@@ -35,7 +35,7 @@ a(1) = TFinish / tau_1;
 a(2) = - TFinish / (2 * tau_2);
 
 %  Time step
-num_tau_step = 50;
+num_tau_step = 20;
 tau_step = zeros(2);
 tau_step(1) = tau_1 / num_tau_step;
 tau_step(2) = tau_2 / num_tau_step;
@@ -178,6 +178,7 @@ for part = 1:2
         figure;
         surf(Temperatures,'EdgeColor', 'None');
         view(2);
+        tau_step(part) = tau_step(part) * 1.1;
     end
 end
 
