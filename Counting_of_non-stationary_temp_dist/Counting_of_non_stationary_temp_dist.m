@@ -178,7 +178,6 @@ for part = 1:2
         figure;
         surf(Temperatures,'EdgeColor', 'None');
         view(2);
-        tau_step(part) = tau_step(part) * 1.1;
     end
 end
 
