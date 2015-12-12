@@ -31,12 +31,12 @@ Temperatures = repmat(TStart, j_max, i_max);
 % T=a*tau
 a1 = TFinish / tau_1;
 a2 = - TFinish / (2 * tau_2);
+ф
 
 %  Time step
 num_tau_step = 25;
 tau_step1 = tau_1 / num_tau_step;
-tau_step1 = tau_2 / num_tau_step;
-tau_STOP1 = ceil(tau_1 / tau_step);
+tau_step2 = tau_2 / num_tau_step;
 
 % Creating matrixes for SLAE
 num_var = i_max * j_max;
@@ -47,7 +47,7 @@ X = zeros(system_dimension);
 INDEX = 1;
 
 
-for cur_k = 1:tau_STOP1
+for cur_k = 1:num_tau_step
 
 %     for i = 1:i_max 
 %         for j = 1:j_max
@@ -97,6 +97,7 @@ for cur_k = 1:tau_STOP1
 %     end
     
 %     X = linsolve(SystemMatrix, RightPartColumn);
+
     % Replacing temperatures
     for I = 1:system_dimension
         j = ceil((I +  j_max_left) / j_max);
@@ -105,7 +106,7 @@ for cur_k = 1:tau_STOP1
     end
     
     for k = 1:j_max_left
-       Temperatures(k, 1) = Temperatures(k, 1) + a1 * tau_step; 
+       Temperatures(k, 1) = Temperatures(k, 1) + a1 * tau_step1; 
     end
 end
 

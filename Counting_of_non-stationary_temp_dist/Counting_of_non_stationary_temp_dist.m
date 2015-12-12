@@ -29,13 +29,15 @@ j_min_right = j_max - ceil(HeightRightZone / h);
 Temperatures = repmat(TStart, j_max, i_max);
 
 % T=a*tau
-a1 = TFinish / tau_1;
-a2 = - TFinish / (2 * tau_2);
+a = zeros(2);
+a(1) = TFinish / tau_1;
+a(2) = - TFinish / (2 * tau_2);
 
 %  Time step
 num_tau_step = 25;
-tau_step1 = tau_1 / num_tau_step;
-tau_step2 = tau_2 / num_tau_step;
+tau_step = zeros(2);
+tau_step(1) = tau_1 / num_tau_step;
+tau_step(2) = tau_2 / num_tau_step;
 
 % Creating matrixes for SLAE
 num_var = i_max * j_max;
@@ -45,67 +47,68 @@ RightPartColumn = zeros(system_dimension);
 X = zeros(system_dimension);
 INDEX = 1;
 
+for part = 1:2
+    for cur_k = 1:num_tau_step
 
-for cur_k = 1:num_tau_step
-
-%     for i = 1:i_max 
-%         for j = 1:j_max
-%             % Choosing the template
-%             if i == 1
-%                 if j == 1
-%                     Temp_help =  0.5 * (Temperatures(1, 2) + Temperatures(2, 1));
-%                 end
-%                 
-%                 if j > 1 && j < j_max
-%                     Temp_help = 0.5 * (0.5 * (Temperatures(j - 1, 1) + Temperatures(j + 1, 1)) + Temperatures(j, 2));     
-%                 end      
-%                 
-%                 if j == j_max
-%                     Temp_help =  0.5 * (Temperatures(j_max, 2) + Temperatures(j_max - 1, 1));
-%                 end
-%             end
-%             
-%             if i > 1 && i < i_max
-%                 if j>1 && j < j_max
-%                     Temp_help = 0.25 * (Temperatures(j - 1, i) + Temperatures(j + 1, i) + Temperatures(j, i - 1) + Temperatures(j, i + 1));        
-%                 end
-%                 
-%                 if j == 1
-%                      Temp_help = 0.5 * (0.5 * (Temperatures(1, i - 1) + Temperatures(1, i + 1)) + Temperatures(2, i));
-%                 end
-% 
-%                 if j == j_max
-%                      Temp_help = 0.5 * (0.5 * (Temperatures(j_max, i - 1) + Temperatures(j_max, i + 1)) + Temperatures(j_max - 1, i));  
-%                 end
-%             end           
-%          
-%             if i == i_max
-%                 if j == j_max
-%                     Temp_help =  0.5 * (Temperatures(j_max - 1, i_max) + Temperatures(j_max, i_max - 1));
-%                 end
-%                 
-%                 if j < j_max && j > 1
-%                     Temp_help = 0.5 * (0.5 * (Temperatures(j - 1, i_max) + Temperatures(j + 1, i_max)) + Temperatures(j, i_max - 1));     
-%                 end
-%                 
-%                 if j == 1
-%                     Temp_help =  0.5 * (Temperatures(2, i_max) + Temperatures(1, i_max - 1));
-%                 end
-%             end
-%         end
-%     end
+        for i = 1:i_max 
+            for j = 1:j_max
+                % Choosing the template
+                if i == 1
+                    if j == 1
+                        Temp_help =  0.5 * (Temperatures(1, 2) + Temperatures(2, 1));
+                    end
+                    
+                    if j > 1 && j < j_max
+                        Temp_help = 0.5 * (0.5 * (Temperatures(j - 1, 1) + Temperatures(j + 1, 1)) + Temperatures(j, 2));     
+                    end      
+                    
+                    if j == j_max
+                        Temp_help =  0.5 * (Temperatures(j_max, 2) + Temperatures(j_max - 1, 1));
+                    end
+                end
+                
+                if i > 1 && i < i_max
+                    if j>1 && j < j_max
+                        Temp_help = 0.25 * (Temperatures(j - 1, i) + Temperatures(j + 1, i) + Temperatures(j, i - 1) + Temperatures(j, i + 1));        
+                    end
+                    
+                    if j == 1
+                         Temp_help = 0.5 * (0.5 * (Temperatures(1, i - 1) + Temperatures(1, i + 1)) + Temperatures(2, i));
+                    end
     
-%     X = linsolve(SystemMatrix, RightPartColumn);
+                    if j == j_max
+                         Temp_help = 0.5 * (0.5 * (Temperatures(j_max, i - 1) + Temperatures(j_max, i + 1)) + Temperatures(j_max - 1, i));  
+                    end
+                end           
+             
+                if i == i_max
+                    if j == j_max
+                        Temp_help =  0.5 * (Temperatures(j_max - 1, i_max) + Temperatures(j_max, i_max - 1));
+                    end
+                    
+                    if j < j_max && j > 1
+                        Temp_help = 0.5 * (0.5 * (Temperatures(j - 1, i_max) + Temperatures(j + 1, i_max)) + Temperatures(j, i_max - 1));     
+                    end
+                    
+                    if j == 1
+                        Temp_help =  0.5 * (Temperatures(2, i_max) + Temperatures(1, i_max - 1));
+                    end
+                end
+            end
+        end
 
-    % Replacing temperatures
-    for I = 1:system_dimension
-        j = ceil((I +  j_max_left) / j_max);
-        i = I + j_max_left - j_max * (j - 1);
-        Temperatures(i, j) = X(I);
-    end
-    
-    for k = 1:j_max_left
-       Temperatures(k, 1) = Temperatures(k, 1) + a1 * tau_step1; 
+    %     X = linsolve(SystemMatrix, RightPartColumn);
+
+        % Replacing temperatures
+        for I = 1:system_dimension
+            j = ceil((I +  j_max_left) / j_max);
+            i = I + j_max_left - j_max * (j - 1);
+            Temperatures(i, j) = X(I);
+        end
+
+        for k = 1:j_max_left
+           Temperatures(k, 1) = Temperatures(k, 1) + a(part) * tau_step(part); 
+        end
     end
 end
 
