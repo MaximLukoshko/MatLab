@@ -32,7 +32,7 @@ Temperatures = repmat(TStart, j_max, i_max);
 a1 = TFinish / tau_1;
 a2 = - TFinish / (2 * tau_2);
 
-CurrentTimeMoment = 0;
+INDEX = 0;
 
 %  Time step
 num_tau_step = 25;
