@@ -15,7 +15,7 @@ eps = 0.001;
 Lambda = 1.7;
 
 % Sharing to zones
-h = 0.1;
+h = 0.3;
 i_max = floor(WIDTH / h);
 j_max = floor(HEIGHT / h);
 j_max_left = floor(HeightLeftZone / h) ;
@@ -96,10 +96,11 @@ while num_iter < MAX_ITER && deltaMax > eps
 end
 
 
+disp(num2str(num_iter));
 
 figure;
-disp(Temperatures);
-surf(Temperatures,'EdgeColor', 'None');
+% disp(Temperatures);
+surf(Temperatures);
 
 % Flow, that go in and out the zone
 F_in = 0;
@@ -112,7 +113,6 @@ for j=1:j_max
 end
 
 conservatism = abs(F_in + F_out) / (abs(F_in)+abs(F_out));
-disp(num2str(conservatism));
 
 figure;
 surf(Temperatures,'EdgeColor', 'None');
