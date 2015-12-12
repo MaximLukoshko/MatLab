@@ -34,7 +34,7 @@ a(1) = TFinish / tau_1;
 a(2) = - TFinish / (2 * tau_2);
 
 %  Time step
-num_tau_step = 25;
+num_tau_step = 10;
 tau_step = zeros(2);
 tau_step(1) = tau_1 / num_tau_step;
 tau_step(2) = tau_2 / num_tau_step;
@@ -42,7 +42,7 @@ tau_step(2) = tau_2 / num_tau_step;
 % Creating matrixes for SLAE
 num_var = i_max * j_max;
 system_dimension = num_var - j_max_left - j_max + j_min_right;
-SystemMatrix = zeros(system_dimension,system_dimension);
+SystemMatrix = zeros(system_dimension, system_dimension);
 RightPartColumn = zeros(system_dimension);
 X = zeros(system_dimension);
 INDEX = 1;
@@ -53,17 +53,33 @@ for part = 1:2
         for i = 1:i_max 
             for j = 1:j_max
                 % Choosing the template
-                if i == 1
-                    if j == 1
-                        Temp_help =  0.5 * (Temperatures(1, 2) + Temperatures(2, 1));
-                    end
-                    
-                    if j > 1 && j < j_max
-                        Temp_help = 0.5 * (0.5 * (Temperatures(j - 1, 1) + Temperatures(j + 1, 1)) + Temperatures(j, 2));     
+                if i == 1                  
+                    if j > j_max_left + 1 && j < j_max
+                        SystemMatrix(INDEX, INDEX) = 0.25 * h * h - tau_step(part) * a(part);
+                        SystemMatrix(INDEX, INDEX - 1) = - 0.5 * tau_step(part) * a(part); 
+                        SystemMatrix(INDEX, INDEX + 1) = - 0.5 * tau_step(part) * a(part); 
+                        SystemMatrix(INDEX, INDEX + j_max) = - tau_step(part) * a(part); 
+                        RightPartColumn(INDEX) = 0.5 * h * h * Temperatures(j, i); 
+                        INDEX = INDEX + 1;
+                        continue
                     end      
                     
+                    if j == j_max_left + 1 
+                        SystemMatrix(INDEX, INDEX) = 0.25 * h * h - tau_step(part) * a(part);
+                        SystemMatrix(INDEX, INDEX + 1) = - 0.5 * tau_step(part) * a(part); 
+                        SystemMatrix(INDEX, INDEX + j_max) = - tau_step(part) * a(part); 
+                        RightPartColumn(INDEX) = 0.5 * h * h * Temperatures(i, j) + 0.5 * tau_step(part) * a(part) * Temperatures(j_max, i); 
+                        INDEX = INDEX + 1;
+                        continue
+                    end   
+                    
                     if j == j_max
-                        Temp_help =  0.5 * (Temperatures(j_max, 2) + Temperatures(j_max - 1, 1));
+                        SystemMatrix(INDEX, INDEX) = 0.25 * h * h - tau_step(part) * a(part);
+                        SystemMatrix(INDEX, INDEX - 1) = - 0.5 * tau_step(part) * a(part); 
+                        SystemMatrix(INDEX, INDEX + j_max) = - 0.5 * tau_step(part) * a(part); 
+                        RightPartColumn(INDEX) = 0.25 * h * h * Temperatures(i, j);
+                        INDEX = INDEX + 1;
+                        continue
                     end
                 end
                 
@@ -94,11 +110,16 @@ for part = 1:2
                         Temp_help =  0.5 * (Temperatures(2, i_max) + Temperatures(1, i_max - 1));
                     end
                 end
+                
+%                 Add numvr++;
+%                 if (i > 1) || (i == 1 && j > j_max_left)
+%                    INDEX = INDEX + 1; 
+%                 end
             end
         end
 
-    %     X = linsolve(SystemMatrix, RightPartColumn);
-
+        X = linsolve(SystemMatrix, RightPartColumn);
+    
         % Replacing temperatures
         for I = 1:system_dimension
             j = ceil((I +  j_max_left) / j_max);
