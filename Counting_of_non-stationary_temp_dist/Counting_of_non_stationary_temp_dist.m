@@ -5,7 +5,7 @@ clear all
 % TLeft = 160.0; 
 % TRight = 350.0;
 A = 50;
-TStart = 0.0;
+TStart = 200.0;
 TFinish = 160.0;
 tau_1 = 50;
 tau_2 = 50;
@@ -27,7 +27,10 @@ j_max_left = floor(HeightLeftZone / h) ;
 j_min_right = j_max - ceil(HeightRightZone / h);
 
 % Matrix of temperaturies
-Temperatures = repmat(TStart, j_max, i_max);
+Temperatures = zeros(j_max, i_max);
+for k = 1:j_max_left
+   Temperatures(k, 1) = TStart; 
+end
 
 % T=a*tau
 a = zeros(2);
@@ -177,7 +180,7 @@ for part = 1:2
         
         figure;
         surf(Temperatures,'EdgeColor', 'None');
-        view(2);
+%         view(2);
     end
 end
 
