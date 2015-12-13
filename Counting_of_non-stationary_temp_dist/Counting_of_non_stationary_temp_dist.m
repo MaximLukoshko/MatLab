@@ -14,11 +14,6 @@ HEIGHT = 3;
 HeightLeftZone = 1; 
 HeightRightZone = 0;
 
-% Stop Parametres
-MAX_ITER = 10000;
-eps = 0.001;
-Lambda = 1.7;
-
 % Sharing to zones
 h = 0.4;
 i_max = floor(WIDTH / h);
@@ -53,6 +48,7 @@ INDEX = 1;
 
 for part = 1:2
     for cur_k = 1:num_tau_step
+%   Changed the temperature on the plate
     for k = 1:j_max_left
        Temperatures(k, 1) = Temperatures(k, 1) + a(part) * tau_step(part); 
     end
