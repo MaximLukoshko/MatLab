@@ -4,14 +4,14 @@ clear all
 % Initial Condition
 % TLeft = 160.0; 
 % TRight = 350.0;
-A = 50;
+A = 25;
 TStart = 0.0;
 TFinish = 160.0;
 tau_1 = 50;
 tau_2 = 50;
-WIDTH = 20; 
-HEIGHT = 12; 
-HeightLeftZone = 8; 
+WIDTH = 100; 
+HEIGHT = 3; 
+HeightLeftZone = 1; 
 HeightRightZone = 0;
 
 % Stop Parametres
